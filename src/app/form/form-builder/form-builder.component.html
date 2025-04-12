@@ -1,0 +1,51 @@
+<form [formGroup]="fieldForm" (ngSubmit)="onSubmit()" class="card p-3 shadow">
+  <h5>Add New Field</h5>
+
+  <div class="mb-2">
+    <label>Field Type</label>
+    <select class="form-select" formControlName="type">
+      <option *ngFor="let type of fieldTypes" [value]="type">{{ type }}</option>
+    </select>
+  </div>
+
+  <div class="mb-2">
+    <label>Label</label>
+    <input class="form-control" formControlName="label" />
+  </div>
+
+  <div class="mb-2">
+    <label>Placeholder</label>
+    <input class="form-control" formControlName="placeholder" />
+  </div>
+
+  <div class="form-check mb-3">
+    <input type="checkbox" class="form-check-input" formControlName="required" />
+    <label class="form-check-label">Required</label>
+  </div>
+
+  <div *ngIf="showOptions()">
+    <label>Options</label>
+    <div formArrayName="options">
+      <div *ngFor="let opt of options.controls; let i = index" [formGroupName]="i" class="d-flex gap-2 mb-2">
+        <input class="form-control" placeholder="Label" formControlName="label" />
+        <input class="form-control" placeholder="Value" formControlName="value" />
+        <button type="button" class="btn btn-danger btn-sm" (click)="removeOption(i)">×</button>
+      </div>
+    </div>
+    <button type="button" class="btn btn-secondary btn-sm" (click)="addOption()">Add Option</button>
+  </div>
+  <button type="submit" class="btn fancy-button w-100">
+    <span>
+      <svg
+        height="24"
+        width="24"
+        viewBox="0 0 24 24"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path d="M0 0h24v24H0z" fill="none"></path>
+        <path d="M11 11V5h2v6h6v2h-6v6h-2v-6H5v-2z" fill="currentColor"></path>
+      </svg>
+      Add Field
+    </span>
+  </button>
+</form>

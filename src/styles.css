@@ -1,0 +1,44 @@
+/* You can add global styles to this file, and also import other style files */
+
+html,
+body {
+    height: 100%;
+}
+
+body {
+    background-image: linear-gradient(15deg, #13557c 0%, #80d0c7 100%) !important;
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+}
+
+.primary-btn {
+    background-color: #13557c;
+    color: #ffff;
+}
+
+.main-title {
+    text-shadow: 2px 2px #000077;
+    color: ghostwhite;
+}
+
+/* From Uiverse.io by felipesntr */
+.fancy-button {
+    border: 2px solid #13557c;
+    background-color: #13557c;
+    border-radius: 0.9em;
+    cursor: pointer;
+    transition: all ease-in-out 0.2s;
+}
+
+.fancy-button span {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+    font-weight: 600;
+}
+
+.fancy-button:hover {
+    background-color: #002b42;
+}
