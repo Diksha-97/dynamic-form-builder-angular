@@ -9,7 +9,7 @@ body {
     background-image: linear-gradient(15deg, #13557c 0%, #80d0c7 100%) !important;
     box-sizing: border-box;
     padding: 0;
-    margin: 0;
+    margin: 0;  font-size: 14px;
 }
 
 .primary-btn {
@@ -21,7 +21,9 @@ body {
     text-shadow: 2px 2px #000077;
     color: ghostwhite;
 }
-
+.sub-headings{
+    text-align: center;
+}
 /* From Uiverse.io by felipesntr */
 .fancy-button {
     border: 2px solid #13557c;
@@ -41,4 +43,8 @@ body {
 
 .fancy-button:hover {
     background-color: #002b42;
+}
+
+.form-select {    
+    padding: 4px 7px;
 }

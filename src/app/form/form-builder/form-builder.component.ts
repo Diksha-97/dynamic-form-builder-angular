@@ -1,54 +1,88 @@
-import { Component, EventEmitter, Output } from '@angular/core';
-import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { FormField } from 'src/app/shared/models/form-field.model';
+import { FormService } from 'src/app/shared/services/form.service';
 
 @Component({
   selector: 'app-form-builder',
   templateUrl: './form-builder.component.html',
   styleUrls: ['./form-builder.component.css']
 })
-export class FormBuilderComponent {
-  @Output() fieldAdded = new EventEmitter<any>();
-  fieldForm: FormGroup;
+export class FormBuilderComponent implements OnInit {
 
+  // simplified version
   fieldTypes = ['text', 'textarea', 'radio', 'checkbox', 'dropdown'];
+  field = {
+    type: 'text',
+    label: '',
+    placeholder: '',
+    required: false,
+    options: [{ label: '', value: '' }]
+  };
 
-  constructor(private fb: FormBuilder) {
-    this.fieldForm = this.fb.group({
-      type: ['text', Validators.required],
-      label: ['', Validators.required],
-      placeholder: [''],
-      required: [false],
-      options: this.fb.array([])
-    });
+  constructor(private formService: FormService) { }
+  ngOnInit(): void {
+    console.log('Method implemented.');
   }
+  validateField(field: FormField) {
+    const requiredTypesWithOptions = ['radio', 'checkbox', 'dropdown'];
 
-  get options(): FormArray {
-    return this.fieldForm.get('options') as FormArray;
-  }
+    // Rule 1: label is required
+    if (!field.label || field.label.trim() === '') {
+      return { valid: false, error: "Label is required." };
+    }
 
-  showOptions(): boolean {
-    const type = this.fieldForm.get('type')?.value;
-    return ['radio', 'checkbox', 'dropdown'].includes(type);
+    // Rule 2: placeholder is optional — no validation needed
+
+    // Rule 3: options array required for specific types
+    if (requiredTypesWithOptions.includes(field.type)) {
+      if (!Array.isArray(field.options) || field.options.length === 0) {
+        return { valid: false, error: `Options are required for type '${field.type}'.` };
+      }
+
+      for (const [i, option] of field.options.entries()) {
+        if (!option.label || !option.value) {
+          return {
+            valid: false,
+            error: `Option ${i+1} is missing 'label' or 'value'.`
+          };
+        }
+      }
+    }
+
+    // All validations passed
+    return { valid: true };
   }
 
   addOption() {
-    this.options.push(this.fb.group({
-      label: [''],
-      value: ['']
-    }));
+    this.field.options?.push({ label: '', value: '' });
   }
 
   removeOption(index: number) {
-    this.options.removeAt(index);
+    this.field.options?.splice(index, 1);
   }
 
-  onSubmit() {
-    if (this.fieldForm.valid) {
-      this.fieldAdded.emit(this.fieldForm.value);
-      this.fieldForm.reset({ type: 'text', required: false, options: [] });
-      while (this.options.length) {
-        this.options.removeAt(0);
-      }
+  addField() {
+    // Validation
+    const result = this.validateField(this.field as FormField);
+    if (result.error) {
+      alert(result.error);
+      return;
     }
+
+    this.formService.addField(this.field as FormField);
+
+    this.resetForm();
+  }
+  showOptions(type: string) {
+    return ['radio', 'checkbox', 'dropdown'].includes(type);
+  }
+  resetForm() {
+    this.field = {
+      type: 'text',
+      label: '',
+      placeholder: '',
+      required: false,
+      options: [{ label: '', value: '' }]
+    };
   }
 }

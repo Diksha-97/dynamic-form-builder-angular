@@ -6,14 +6,10 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./form.component.css']
 })
 export class FormComponent implements OnInit {
-  formFields: any[] = [];
 
   constructor() { }
 
   ngOnInit(): void {
   }
 
-  handleFieldAdded(field: any) {
-    this.formFields.push(field);
-  }
 }

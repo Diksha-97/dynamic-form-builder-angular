@@ -1,38 +1,46 @@
-<form [formGroup]="form" (ngSubmit)="onSubmit()" class="card p-3 shadow">
-  <h5>Form Preview</h5>
+<form [formGroup]="form" (ngSubmit)="onSubmit()" class="card shadow-sm p-4 preview-from">
+  <h5 class="fw-semibold sub-headings" [ngClass]="{'my-auto': fields.length==0}">Form Preview</h5>
 
   <div *ngFor="let field of fields" class="mb-3">
-    <label>{{ field.label }} <span *ngIf="field.required">*</span></label>
+    <label class="form-label">
+      {{ field.label }} <span *ngIf="field.required" class="text-danger">*</span>
+    </label>
 
-    <ng-container [ngSwitch]="field.type">
-      <input *ngSwitchCase="'text'" type="text" class="form-control" [formControlName]="field.label" [placeholder]="field.placeholder" />
-      <textarea *ngSwitchCase="'textarea'" class="form-control" [formControlName]="field.label" [placeholder]="field.placeholder"></textarea>
-
-      <div *ngSwitchCase="'radio'">
-        <div *ngFor="let opt of field.options" class="form-check">
-          <input type="radio" class="form-check-input" [value]="opt.value" [formControlName]="field.label" />
-          <label class="form-check-label">{{ opt.label }}</label>
-        </div>
+    <!-- Text Input -->
+    <input *ngIf="field.type === 'text'" class="form-control form-control-sm" [formControlName]="field.label"
+      [placeholder]="field.placeholder" />
+      <div class="text-danger small" *ngIf="form.get(field.label)?.touched && form.get(field.label)?.invalid">
+        <div *ngIf="form.get(field.label)?.errors?.['required']">This field is required.</div>
       </div>
+    <!-- Textarea -->
+    <textarea *ngIf="field.type === 'textarea'" class="form-control form-control-sm" [formControlName]="field.label"
+      [placeholder]="field.placeholder"></textarea>
 
-      <div *ngSwitchCase="'dropdown'">
-        <select class="form-select" [formControlName]="field.label">
-          <option *ngFor="let opt of field.options" [value]="opt.value">{{ opt.label }}</option>
-        </select>
+    <!-- Radio Buttons -->
+    <div *ngIf="field.type === 'radio'">
+      <div *ngFor="let opt of field.options" class="form-check form-check-inline">
+        <input type="radio" class="form-check-input" [value]="opt.value" [formControlName]="field.label" />
+        <label class="form-check-label">{{ opt.label }}</label>
       </div>
+    </div>
 
-      <div *ngSwitchCase="'checkbox'">
-        <div *ngFor="let opt of field.options" class="form-check">
-          <input type="checkbox" class="form-check-input" [formControlName]="field.label" />
-          <label class="form-check-label">{{ opt.label }}</label>
-        </div>
+    <!-- Checkboxes -->
+    <div *ngIf="field.type === 'checkbox'">
+      <div *ngFor="let opt of field.options" class="form-check form-check-inline">
+        <input type="checkbox" class="form-check-input" [value]="opt.value" />
+        <label class="form-check-label">{{ opt.label }}</label>
       </div>
-    </ng-container>
+    </div>
+
+    <!-- Dropdown -->
+    <select *ngIf="field.type === 'dropdown'" class="form-select" [formControlName]="field.label">
+      <option *ngFor="let opt of field.options" [value]="opt.value">{{ opt.label }}</option>
+    </select>
   </div>
-<button type="submit" class="btn fancy-button w-100">
-  <span>
-    
-    Submit
-  </span>
-</button>
+
+  <button *ngIf="fields.length>0" type="submit" class="btn fancy-button w-100">
+    <span>
+      Submit
+    </span>
+  </button>
 </form>
