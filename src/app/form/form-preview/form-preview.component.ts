@@ -25,33 +25,6 @@ export class FormPreviewComponent implements OnInit {
     });
   }
   
-
-  validateField(field: FormField): boolean {
-    if (!field.label || field.label.trim() === '') {
-      this.fieldValidationErrors[field.label || 'unknown'] = 'Label is required.';
-      return false;
-    }
-  
-    const needsOptions = ['radio', 'checkbox', 'dropdown'];
-    if (needsOptions.includes(field.type)) {
-      if (!Array.isArray(field.options) || field.options.length === 0) {
-        this.fieldValidationErrors[field.label] = `Options are required for '${field.type}'.`;
-        return false;
-      }
-  
-      for (const [i, opt] of field.options.entries()) {
-        if (!opt.label || !opt.value) {
-          this.fieldValidationErrors[field.label] = `Each option must have a label and value.`;
-          return false;
-        }
-      }
-    }
-  
-    // If no errors, clear any existing
-    delete this.fieldValidationErrors[field.label];
-    return true;
-  }
-  
   buildForm() {
     const group: any = {};
     this.fields.forEach(field => {
@@ -59,7 +32,10 @@ export class FormPreviewComponent implements OnInit {
     });
     this.form = this.fb.group(group);
   }
-
+  removeField(index: number) {
+    this.formService.removeField(index);
+  }
+  
   onSubmit() {
     if (this.form.invalid) {
       this.form.markAllAsTouched(); // 💡 triggers validation messages

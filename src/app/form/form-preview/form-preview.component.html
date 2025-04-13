@@ -1,7 +1,7 @@
 <form [formGroup]="form" (ngSubmit)="onSubmit()" class="card shadow-sm p-4 preview-from">
   <h5 class="fw-semibold sub-headings" [ngClass]="{'my-auto': fields.length==0}">Form Preview</h5>
 
-  <div *ngFor="let field of fields" class="mb-3">
+  <div *ngFor="let field of fields; let i = index" class="mb-3 position-relative">
     <label class="form-label">
       {{ field.label }} <span *ngIf="field.required" class="text-danger">*</span>
     </label>
@@ -11,7 +11,8 @@
       [placeholder]="field.placeholder" />
       <div class="text-danger small" *ngIf="form.get(field.label)?.touched && form.get(field.label)?.invalid">
         <div *ngIf="form.get(field.label)?.errors?.['required']">This field is required.</div>
-      </div>
+      </div> 
+      <div class="btn btn-sm btn-light remove-btn" (click)="removeField(i)">X</div>
     <!-- Textarea -->
     <textarea *ngIf="field.type === 'textarea'" class="form-control form-control-sm" [formControlName]="field.label"
       [placeholder]="field.placeholder"></textarea>

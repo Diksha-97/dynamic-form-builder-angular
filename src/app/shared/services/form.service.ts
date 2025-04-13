@@ -14,6 +14,11 @@ export class FormService {
     const current = this.fields.value;
     this.fields.next([...current, field]);
   }
+  removeField(index: number) {
+    const current = [...this.fields.value];
+    current.splice(index, 1);
+    this.fields.next(current);
+  }
 
   getFields() {
     return this.fields.value;
